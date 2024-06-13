@@ -7,7 +7,6 @@ import com.cn.lxll.dcf.pojo.Role;
 import com.cn.lxll.dcf.pojo.User;
 import com.cn.lxll.dcf.service.UserService;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,9 +40,14 @@ public class AuthController {
     @PostMapping(value = "/register", params = {"username", "password"})
     public String register(@RequestParam String username, @RequestParam String password) {
         log.info("Register user: {}, {}", username, password);
-        if (username == null || password == null) {
+        if (username == null || username.trim().isEmpty()) {
             JSONObject jsonObject = Message.FAIL.toJSONObject();
-            jsonObject.put("message", "用户名或密码为空");
+            jsonObject.put("message", "用户名为空");
+            return jsonObject.toJSONString();
+        }
+        if (password == null || password.trim().isEmpty()) {
+            JSONObject jsonObject = Message.FAIL.toJSONObject();
+            jsonObject.put("message", "密码为空");
             return jsonObject.toJSONString();
         }
         if (userService.existsByUsername(username)) {

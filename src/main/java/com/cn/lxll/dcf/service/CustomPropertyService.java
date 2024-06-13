@@ -127,10 +127,6 @@ public class CustomPropertyService {
         customPropertyDao.save(oldCustomProperty);
     }
 
-    public void updateProperty(CustomProperty customProperty) {
-        customPropertyDao.save(customProperty);
-    }
-
     public void deleteProperty(Long id) {
         customPropertyDao.deleteById(id);
     }

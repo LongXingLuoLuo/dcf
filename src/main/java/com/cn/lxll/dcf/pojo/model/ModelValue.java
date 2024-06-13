@@ -1,6 +1,5 @@
 package com.cn.lxll.dcf.pojo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.neo4j.core.schema.*;

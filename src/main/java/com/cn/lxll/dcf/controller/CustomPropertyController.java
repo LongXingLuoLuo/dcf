@@ -5,8 +5,6 @@ import com.cn.lxll.dcf.message.Message;
 import com.cn.lxll.dcf.pojo.model.CustomProperty;
 import com.cn.lxll.dcf.service.CustomPropertyService;
 import lombok.extern.log4j.Log4j2;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -84,7 +82,7 @@ public class CustomPropertyController {
     public String saveProperty(@RequestBody JSONObject content) {
         String key = content.getString("key");
         Boolean arr = content.getBoolean("arr");
-        CustomProperty property = null;
+        CustomProperty property;
         if (content.containsKey("refId")) {
             Long refId = content.getLong("refId");
             property = customPropertyService.saveRefProperty(key, arr, refId);

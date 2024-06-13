@@ -1,6 +1,5 @@
 package com.cn.lxll.dcf.dao;
 
-import com.cn.lxll.dcf.pojo.User;
 import com.cn.lxll.dcf.pojo.form.Form;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
@@ -23,7 +22,7 @@ public interface FormDao extends Neo4jRepository<Form, Long> {
     @Query("MATCH (u:User) WHERE id(u) = $managerId MATCH (u)-[:MANAGE]->(f:Form) RETURN f")
     List<Form> findAllByManagerId(Long managerId);
 
-    @Query("MATCH (u:User) WHERE id(u) = $userId MATCH (u)-[:MANAGE]->(n) WHERE id(n) = $formId RETURN isNaN(n)")
+    @Query("MATCH (u:User)-[:MANAGE]->(f:Form) WHERE id(u) = $userId AND id(f) = $formId RETURN isNaN(f)")
     boolean isManager(Long formId, Long userId);
 
     @Query("MATCH (f:Form) WHERE id(f) = $formId SET f.updateTime = $updateTime")

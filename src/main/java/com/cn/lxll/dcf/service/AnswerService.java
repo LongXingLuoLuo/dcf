@@ -24,8 +24,8 @@ public class AnswerService {
     @Resource
     private AnswerRecordDao answerRecordDao;
 
-    public Integer saveContentByUserIdAndFormItemId(Long userId, Long formItemId, String content) {
-        return answeredDao.saveContentByUserIdAndFormItemId(userId, formItemId, content);
+    public void saveContentByUserIdAndFormItemId(Long userId, Long formItemId, String content) {
+        answeredDao.saveContentByUserIdAndFormItemId(userId, formItemId, content);
     }
 
     public String getContentByUserIdAndFormItemId(Long userId, Long formItemId) {

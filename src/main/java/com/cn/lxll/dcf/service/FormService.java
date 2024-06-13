@@ -76,9 +76,7 @@ public class FormService {
 
     public List<Form> getAllFormsByManager(Long managerId) {
         List<Form> forms = new ArrayList<>();
-        formDao.findAllByManagerId(managerId).forEach(form -> {
-            forms.add(formDao.findById(form.getId()).orElse(null));
-        });
+        formDao.findAllByManagerId(managerId).forEach(form -> forms.add(formDao.findById(form.getId()).orElse(null)));
         return forms;
     }
 

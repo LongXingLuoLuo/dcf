@@ -31,9 +31,7 @@ public class ModelValueService {
 
     public List<ModelValue> findAllByModelANDProperty(Long modelId, Long propertyId) {
         List<ModelValue> modelValues = new ArrayList<>();
-        modelValueDao.findAllByModelANDProperty(modelId, propertyId).forEach(modelValue -> {
-            modelValues.add(modelValueDao.findById(modelValue.getId()).orElse(null));
-        });
+        modelValueDao.findAllByModelANDProperty(modelId, propertyId).forEach(modelValue -> modelValues.add(modelValueDao.findById(modelValue.getId()).orElse(null)));
         return modelValues;
     }
 

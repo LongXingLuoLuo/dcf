@@ -39,17 +39,13 @@ public class ModelService {
 
     public List<Model> findAllByInfosContains(Long infoId) {
         List<Model> models = new ArrayList<>();
-        modelDao.findAllByInfosContains(infoId).forEach(model -> {
-            models.add(modelDao.findById(model.getId()).orElse(null));
-        });
+        modelDao.findAllByInfosContains(infoId).forEach(model -> models.add(modelDao.findById(model.getId()).orElse(null)));
         return models;
     }
 
     public List<Model> findAllByInfosContainsAndNameLike(Long infoId, String name) {
         List<Model> models = new ArrayList<>();
-        modelDao.findAllByInfosContainsAndNameLike(infoId, name).forEach(model -> {
-            models.add(modelDao.findById(model.getId()).orElse(null));
-        });
+        modelDao.findAllByInfosContainsAndNameLike(infoId, name).forEach(model -> models.add(modelDao.findById(model.getId()).orElse(null)));
         return models;
     }
 
