@@ -35,62 +35,6 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * 获取用户权限信息（角色、菜单权限）
-     *
-     * @param userId 用户id
-     * @return 用户权限信息
-     */
-    public Collection<? extends GrantedAuthority> getUserAuthority(Long userId) {
-        // 实际怎么写以数据表结构为准，这里只是写个例子
-        // 角色(比如ROLE_admin)，菜单操作权限(比如sys:user:list)
-        User user = userDao.findById(userId).orElse(null);
-
-        if (user != null) {
-            return user.getAuthorities();
-        } else {
-            return Collections.emptyList();
-        }
-    }
-
-    public User addUser(User user) {
-        if (user == null || userDao.existsByUsername(user.getUsername())) {
-            return null;
-        }
-        user.setId(null);
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-        return userDao.save(user);
-    }
-
-    public void updateUsername(User user) {
-        if (user == null || user.getId() == null) {
-            return;
-        }
-        userDao.updateUsernameById(user.getId(), user.getUsername());
-    }
-
-    public void updatePassword(User user) {
-        if (user == null || user.getId() == null) {
-            return;
-        }
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-        userDao.updatePasswordById(user.getId(), user.getPassword());
-    }
-
-    public void addRole(User user, Role role) {
-        if (user == null || user.getId() == null || role == null || role.getId() == null) {
-            return;
-        }
-        userDao.hasRoleById(user.getId(), role.getId());
-    }
-
-    public void removeRole(User user, Role role) {
-        if (user == null || role == null) {
-            return;
-        }
-        userDao.removeHasRoleById(user.getId(), role.getId());
-    }
-
-    /**
      * 根据用户名获取用户，若无则为空
      * @param username 用户名
      * @return 用户
@@ -114,15 +58,62 @@ public class UserService implements UserDetailsService {
      * @return 用户
      */
     public User getManagerByFormId(Long formId) {
-        return userDao.findByFormId(formId);
+        return userDao.findByForm(formId);
     }
 
     /**
      * 获取所有用户
      * @return 所有用户
      */
-    public Iterable<User> getAllUsers() {
+    public List<User> getAllUsers() {
         return userDao.findAll();
+    }
+
+    public User save(User user) {
+        if (user == null || userDao.existsByUsername(user.getUsername())) {
+            return null;
+        }
+        user.setId(null);
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        user.setAccountNonExpired(true);
+        user.setAccountNonLocked(true);
+        user.setCredentialsNonExpired(true);
+        user.setEnabled(true);
+        return userDao.save(user);
+    }
+
+    public User saveWithRoles(User user, List<Role> roles) {
+        if (user == null || userDao.existsByUsername(user.getUsername())) {
+            return null;
+        }
+        for (Role role : roles) {
+            if (!roleDao.findById(role.getId()).isPresent()) {
+                return null;
+            }
+        }
+        user.setId(null);
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        user = userDao.save(user);
+        for (Role role : roles) {
+            userDao.addRole(user.getId(), role.getId());
+        }
+        return userDao.findById(user.getId()).orElse(null);
+    }
+
+    public void updateUsername(Long userId, String username) {
+        userDao.updateUsername(userId, username);
+    }
+
+    public void updatePassword(Long userId, String password) {
+        userDao.updatePassword(userId, new BCryptPasswordEncoder().encode(password));
+    }
+
+    public void addRole(Long userId, Long roleId) {
+        userDao.addRole(userId, roleId);
+    }
+
+    public void removeRole(Long userId, Long roleId) {
+        userDao.removeRole(userId, roleId);
     }
 
     /**

@@ -16,5 +16,8 @@ public interface RoleDao extends Neo4jRepository<Role, Long> {
     @Query("MATCH (n:Role) WHERE id(n) = $roleId SET n.name = $name")
     void updateNameById(Long roleId, String name);
 
+    @Query("MERGE (r:Role{name:'user'}) RETURN r")
+    Role findUser();
+
     Boolean existsByName(String name);
 }

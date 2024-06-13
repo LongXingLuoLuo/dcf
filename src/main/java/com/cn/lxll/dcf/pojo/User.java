@@ -1,6 +1,7 @@
 package com.cn.lxll.dcf.pojo;
 
 import com.cn.lxll.dcf.pojo.model.Model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.CreatedDate;
@@ -30,6 +31,7 @@ public class User implements UserDetails{
     private String username;
 
     // 密码
+    @JsonIgnore
     @Property
     private String password;
 
@@ -50,15 +52,9 @@ public class User implements UserDetails{
     private boolean enabled;
 
     // 用户角色
+    @ReadOnlyProperty
     @Relationship("HAS_ROLE")
     private List<Role> roles;
-
-    public User(){
-        this.accountNonExpired = true;
-        this.accountNonLocked = true;
-        this.credentialsNonExpired = true;
-        this.enabled = true;
-    }
 
     /**
      * 返回用户的角色信息
