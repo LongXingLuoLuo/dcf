@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * Project dcf
@@ -24,9 +23,50 @@ public class FormItemController {
     @Resource
     private FormItemService formItemService;
 
+    /**
+     * 获取所有的表单项
+     * @return 所有的表单项
+     */
     @ResponseBody
-    @GetMapping("/get/{id:\\d+}")
-    public String getFormItem(@PathVariable Long id) {
+    @GetMapping(value = "/get/all")
+    public String getAllFormItems() {
+        log.info("Get all formItems");
+        JSONObject jsonObject = Message.SUCCESS.toJSONObject();
+        jsonObject.put("formItems", formItemService.findAll());
+        return jsonObject.toJSONString();
+    }
+
+    /**
+     * 获取表单的所有表单项
+     * @param formId 表单id
+     * @return 表单的所有表单项
+     */
+    @ResponseBody
+    @GetMapping(value = "/get/all", params = "formId")
+    public String getAllFormItemsByForm(@RequestParam Long formId) {
+        log.info("Get all formItems of form: {}", formId);
+        if (formId == null) {
+            JSONObject jsonObject = Message.FAIL.toJSONObject();
+            jsonObject.put("message", "formId is null");
+            return jsonObject.toJSONString();
+        }
+        Form form = new Form();
+        form.setId(formId);
+        JSONObject jsonObject = Message.SUCCESS.toJSONObject();
+        jsonObject.put("formItems", formItemService.findAllByForm(form.getId()));
+        log.info("Get all formItems of form: {}", formId);
+        return jsonObject.toJSONString();
+    }
+
+    /**
+     * 根据id获取表单项
+     * @param id 表单项id
+     * @return 表单项
+     */
+    @ResponseBody
+    @GetMapping(value = "/get", params = "id")
+    public String getFormItemById(@RequestParam Long id) {
+        log.info("Get formItem: {}", id);
         if (id == null) {
             JSONObject jsonObject = Message.FAIL.toJSONObject();
             jsonObject.put("message", "id is null");
@@ -37,159 +77,48 @@ public class FormItemController {
         return jsonObject.toJSONString();
     }
 
+    /**
+     * 新增表单项
+     * @param formItem 表单项
+     * @return 新增的表单项
+     */
     @ResponseBody
-    @GetMapping("/get/all")
-    public String getAllFormItems() {
+    @PostMapping(value = "/save")
+    public String saveFormItem(@RequestBody FormItem formItem) {
+        log.info("Save formItem: {}", formItem);
         JSONObject jsonObject = Message.SUCCESS.toJSONObject();
-        jsonObject.put("formItems", formItemService.getAllFormItems());
-        log.info("Get all formItems");
+        jsonObject.put("formItem", formItemService.save(formItem));
         return jsonObject.toJSONString();
     }
 
-    @ResponseBody
-    @GetMapping(value = "/get/all", params = "formId")
-    public String getAllFormItemsOfForm(@RequestParam Long formId) {
-        if (formId == null) {
-            JSONObject jsonObject = Message.FAIL.toJSONObject();
-            jsonObject.put("message", "formId is null");
-            return jsonObject.toJSONString();
-        }
-        Form form = new Form();
-        form.setId(formId);
-        JSONObject jsonObject = Message.SUCCESS.toJSONObject();
-        jsonObject.put("formItems", formItemService.getAllFormItemsByForm(form));
-        log.info("Get all formItems of form: {}", formId);
-        return jsonObject.toJSONString();
-    }
-
+    /**
+     * 更新表单项
+     * @param formItem 表单项
+     * @return 更新的表单项
+     */
     @ResponseBody
     @PostMapping(value = "/update")
     public String updateFormItem(@RequestBody FormItem formItem) {
+        log.info("Update formItem: {}", formItem);
         if (formItem == null) {
             JSONObject jsonObject = Message.FAIL.toJSONObject();
             jsonObject.put("message", "formItem is null");
             return jsonObject.toJSONString();
         }
-        log.info("Update formItem: {}", formItem);
-        formItemService.updateFormItemWithoutForm(formItem);
+        formItemService.update(formItem);
         return Message.SUCCESS.toJSONObject().toJSONString();
     }
 
+    /**
+     * 删除表单项
+     * @param id 表单项id
+     * @return 删除结果
+     */
     @ResponseBody
-    @PostMapping(value = "/update/{id:\\d+}/label")
-    public String updateTitle(@PathVariable Long id, @RequestBody String label) {
-        if (id == null || label == null) {
-            JSONObject jsonObject = Message.FAIL.toJSONObject();
-            jsonObject.put("message", "id or content is null");
-            return jsonObject.toJSONString();
-        }
-        FormItem formItem = new FormItem();
-        formItem.setId(id);
-        formItem.setLabel(label);
-        formItemService.updateLabel(formItem);
-        return Message.SUCCESS.toJSONObject().toJSONString();
-    }
-
-    @ResponseBody
-    @PostMapping(value = "/update/{id:\\d+}/help")
-    public String updateHelp(@PathVariable Long id, @RequestBody String help) {
-        if (id == null) {
-            JSONObject jsonObject = Message.FAIL.toJSONObject();
-            jsonObject.put("message", "id or content is null");
-            return jsonObject.toJSONString();
-        }
-        FormItem formItem = new FormItem();
-        formItem.setId(id);
-        formItem.setHelp(help);
-        formItemService.updateLabel(formItem);
-        return Message.SUCCESS.toJSONObject().toJSONString();
-    }
-
-    @ResponseBody
-    @PostMapping(value = "/update/{id:\\d+}/type")
-    public String updateType(@PathVariable Long id, @RequestBody String type) {
-        if (id == null || type == null || type.trim().isEmpty()) {
-            JSONObject jsonObject = Message.FAIL.toJSONObject();
-            jsonObject.put("message", "id or content is null");
-            return jsonObject.toJSONString();
-        }
-        FormItem formItem = new FormItem();
-        formItem.setId(id);
-        formItem.setType(type);
-        formItemService.updateLabel(formItem);
-        return Message.SUCCESS.toJSONObject().toJSONString();
-    }
-
-    @ResponseBody
-    @PostMapping(value = "/update/{id:\\d+}/required")
-    public String updateRequired(@PathVariable Long id, @RequestBody Boolean required) {
-        if (id == null) {
-            JSONObject jsonObject = Message.FAIL.toJSONObject();
-            jsonObject.put("message", "id or content is null");
-            return jsonObject.toJSONString();
-        }
-        FormItem formItem = new FormItem();
-        formItem.setId(id);
-        formItem.setRequired(required);
-        formItemService.updateLabel(formItem);
-        return Message.SUCCESS.toJSONObject().toJSONString();
-    }
-
-    @ResponseBody
-    @PostMapping(value = "/update/{id:\\d+}/options")
-    public String updateOptions(@PathVariable Long id, @RequestBody List<String> options) {
-        if (id == null) {
-            JSONObject jsonObject = Message.FAIL.toJSONObject();
-            jsonObject.put("message", "id or content is null");
-            return jsonObject.toJSONString();
-        }
-        FormItem formItem = new FormItem();
-        formItem.setId(id);
-        formItem.setOptions(options);
-        formItemService.updateLabel(formItem);
-        return Message.SUCCESS.toJSONObject().toJSONString();
-    }
-
-    // add
-//    @ResponseBody
-//    @PostMapping(value = "/add", params = "formId")
-//    public String addFormItem(@RequestParam Integer formId) {
-//        if (formId == null) {
-//            JSONObject jsonObject = Message.FAIL.toJSONObject();
-//            jsonObject.put("message", "formId 为空");
-//            return jsonObject.toJSONString();
-//        }
-//        Form form = new Form();
-//        form.setId(Long.valueOf(formId));
-//        FormItem formItem = new FormItem();
-//        formItem.setHelp("表单项描述");
-//        formItem.setLabel("表单项标题");
-//        JSONObject jsonObject = Message.SUCCESS.toJSONObject();
-//        jsonObject.put("formItem", formItemService.addFormItem(formItem, form));
-//        return jsonObject.toJSONString();
-//    }
-
-    @ResponseBody
-    @PostMapping(value = "/add")
-    public String addFormItem(@RequestBody JSONObject jsonParam) {
-        Long formId = jsonParam.getLong("formId");
-        FormItem formItem = jsonParam.getObject("formItem", FormItem.class);
-        if (formId == null) {
-            JSONObject jsonObject = Message.FAIL.toJSONObject();
-            jsonObject.put("message", "formId 为空");
-            return jsonObject.toJSONString();
-        }
-        Form form = new Form();
-        form.setId(formId);
-        JSONObject jsonObject = Message.SUCCESS.toJSONObject();
-        jsonObject.put("formItem", formItemService.addFormItem(formItem, form));
-        return jsonObject.toJSONString();
-    }
-
-    @ResponseBody
-    @DeleteMapping("/delete/{id:\\d+}")
-    public String deleteFormItem(@PathVariable Long id) {
-        formItemService.deleteFormItemById(id);
+    @DeleteMapping(value = "/delete", params = "id")
+    public String deleteFormItem(@RequestParam Long id) {
+        log.info("Delete formItem: {}", id);
+        formItemService.deleteById(id);
         return Message.SUCCESS.toJSONObject().toJSONString();
     }
 }

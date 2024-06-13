@@ -1,6 +1,7 @@
 package com.cn.lxll.dcf.service;
 
 import com.cn.lxll.dcf.dao.FormDao;
+import com.cn.lxll.dcf.dao.FormItemDao;
 import com.cn.lxll.dcf.dao.UserDao;
 import com.cn.lxll.dcf.pojo.User;
 import com.cn.lxll.dcf.pojo.form.Form;
@@ -24,13 +25,15 @@ public class FormService {
     private FormDao formDao;
     @Resource
     private UserDao userDao;
-
-    public Form findFormById(Long id) {
-        return formDao.findById(id).orElse(null);
-    }
+    @Resource
+    private FormItemDao formItemDao;
 
     public List<Form> findAllForms() {
         return formDao.findAll();
+    }
+
+    public Form findFormById(Long id) {
+        return formDao.findById(id).orElse(null);
     }
 
     public Form save(Form form) {
@@ -81,6 +84,7 @@ public class FormService {
     }
 
     public void deleteFormById(Long id) {
+        formItemDao.deleteAllByFormId(id);
         formDao.deleteById(id);
     }
 }

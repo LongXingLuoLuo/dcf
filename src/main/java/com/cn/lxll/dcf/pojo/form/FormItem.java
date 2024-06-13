@@ -1,7 +1,7 @@
 package com.cn.lxll.dcf.pojo.form;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.neo4j.core.schema.*;
 
 import java.util.List;
@@ -16,30 +16,30 @@ import java.util.List;
 public class FormItem {
     @Id
     @GeneratedValue
-    protected Long id;
+    private Long id;
 
-    // 采集项标题
+    // 表单项排序
     @Property
-    protected String label;
+    private Integer order;
 
-    // 采集项描述
+    // 表单项标题
     @Property
-    protected String help;
+    private String label;
 
-    // 采集项类型
+    // 表单项类型
     @Property
-    protected String type = "text";
+    private String type = "text";
 
-    // 采集项是否必填
+    // 表单项是否必填
     @Property
-    protected Boolean required = false;
+    private Boolean required;
 
-    // 采集项选项
+    // 表单项选项
     @Property
-    protected List<String> options;
+    private List<String> options;
 
-    // 采集项表单
-    @JsonIgnore
+    // 表单项关联的表单
+    @ReadOnlyProperty
     @Relationship(type = "HAS_ITEM", direction = Relationship.Direction.INCOMING)
-    protected HasItem hasItem;
+    private Form form;
 }
