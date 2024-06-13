@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.cn.lxll.dcf.message.Message;
 import com.cn.lxll.dcf.pojo.model.CustomObject;
 import com.cn.lxll.dcf.service.CustomObjectService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ import java.util.List;
  *
  * @author Lxll
  */
+@Log4j2
 @RequestMapping(value = "/object", produces = "application/json;charset=utf-8")
 @Controller
 public class CustomObjectController {

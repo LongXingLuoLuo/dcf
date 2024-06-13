@@ -1,13 +1,11 @@
 package com.cn.lxll.dcf.service;
 
 import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 import com.cn.lxll.dcf.dao.AnswerRecordDao;
 import com.cn.lxll.dcf.dao.AnsweredDao;
 import com.cn.lxll.dcf.pojo.form.AnswerRecord;
 import com.cn.lxll.dcf.pojo.form.Answered;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -23,15 +21,11 @@ import java.util.List;
 public class AnswerService {
     @Resource
     private AnsweredDao answeredDao;
-    @Autowired
+    @Resource
     private AnswerRecordDao answerRecordDao;
 
     public Integer saveContentByUserIdAndFormItemId(Long userId, Long formItemId, String content) {
         return answeredDao.saveContentByUserIdAndFormItemId(userId, formItemId, content);
-    }
-
-    public boolean existsByUserIdAndFormItemId(Long userId, Long formItemId) {
-        return answeredDao.existsByUserIdAndFormItemId(userId, formItemId);
     }
 
     public String getContentByUserIdAndFormItemId(Long userId, Long formItemId) {

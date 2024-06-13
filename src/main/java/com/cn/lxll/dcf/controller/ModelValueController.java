@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.cn.lxll.dcf.message.Message;
 import com.cn.lxll.dcf.pojo.model.ModelValue;
 import com.cn.lxll.dcf.service.ModelValueService;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +16,7 @@ import javax.annotation.Resource;
  *
  * @author Lxll
  */
-@Slf4j
+@Log4j2
 @RequestMapping(value = "/model/value", produces = "application/json;charset=utf-8")
 @Controller
 public class ModelValueController {

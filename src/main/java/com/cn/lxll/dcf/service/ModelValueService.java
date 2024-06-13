@@ -6,7 +6,7 @@ import com.cn.lxll.dcf.dao.ModelValueDao;
 import com.cn.lxll.dcf.pojo.model.CustomProperty;
 import com.cn.lxll.dcf.pojo.model.Model;
 import com.cn.lxll.dcf.pojo.model.ModelValue;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -19,7 +19,7 @@ import java.util.List;
  *
  * @author Lxll
  */
-@Slf4j
+@Log4j2
 @Service
 public class ModelValueService {
     @Resource

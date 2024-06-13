@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.cn.lxll.dcf.message.Message;
 import com.cn.lxll.dcf.pojo.model.CustomProperty;
 import com.cn.lxll.dcf.service.CustomPropertyService;
+import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -17,10 +18,10 @@ import javax.annotation.Resource;
  *
  * @author Lxll
  */
+@Log4j2
 @RequestMapping(value = "/object/property", produces = "application/json;charset=utf-8")
 @Controller
 public class CustomPropertyController {
-    private static final Logger log = LoggerFactory.getLogger(CustomPropertyController.class);
     @Resource
     private CustomPropertyService customPropertyService;
 
