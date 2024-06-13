@@ -19,9 +19,11 @@ public class Model {
     @GeneratedValue
     private Long id;
 
+    // 模型名
     @Property
     private String name;
 
+    // 模型包含的信息
     @ReadOnlyProperty
     @Relationship(value = "HAS_INFO", direction = Relationship.Direction.OUTGOING)
     private List<CustomObject> infos;

@@ -14,16 +14,13 @@ import java.util.List;
  * @author Lxll
  */
 public interface FormDao extends Neo4jRepository<Form, Long> {
-    @Query("MATCH (n:Form) WHERE id(n) = $formId SET n.title = $title")
-    void updateTitleById(Long formId, String title);
+    @Query("MATCH (f:Form), (u:User) WHERE id(f) = $formId AND id(u) = $managerId MERGE (u)-[:MANAGE]->(f)")
+    void setManager(Long formId, Long managerId);
 
-    @Query("MATCH (n:Form) WHERE id(n) = $formId SET n.description = $description")
-    void updateDescriptionById(Long formId, String description);
+    @Query("MATCH (f:Form) WHERE id(f) = $formId MATCH (:User)-[r:MANAGE]->(f) DELETE r")
+    void removeManager(Long formId);
 
-    @Query("MATCH (n:Form) WHERE id(n) = $formId MATCH (u:User) WHERE id(u) = $managerId MATCH ()-[r:MANAGE]->(n) DELETE r CREATE (u)-[:MANAGE]->(n)")
-    void updateManagerById(Long formId, Long managerId);
-
-    @Query("MATCH (u:User) WHERE id(u) = $managerId MATCH (u)-[:MANAGE]->(n) RETURN n")
+    @Query("MATCH (u:User) WHERE id(u) = $managerId MATCH (u)-[:MANAGE]->(f:Form) RETURN f")
     List<Form> findAllByManagerId(Long managerId);
 
     @Query("MATCH (u:User) WHERE id(u) = $userId MATCH (u)-[:MANAGE]->(n) WHERE id(n) = $formId RETURN isNaN(n)")

@@ -77,10 +77,6 @@ public class ModelService {
             }
         }
         model = modelDao.save(model);
-//        modelDao.clearInfos(model.getId());
-//        for (CustomObject customObject : model.getInfos()) {
-//            modelDao.addInfo(model.getId(), customObject.getId());
-//        }
         return modelDao.findById(model.getId()).orElse(null);
     }
 

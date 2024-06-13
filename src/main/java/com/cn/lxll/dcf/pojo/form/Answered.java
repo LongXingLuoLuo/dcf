@@ -16,9 +16,11 @@ public class Answered {
     @GeneratedValue
     private Long id;
 
+    // 表单结果内容
     @Property
     private String content;
 
+    // 表单结果对应的表单项
     @JsonIgnore
     @TargetNode
     private FormItem formItem;

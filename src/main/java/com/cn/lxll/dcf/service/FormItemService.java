@@ -43,8 +43,6 @@ public class FormItemService {
             return null;
         }
         formDao.updateUpdateTimeById(form.getId(), new Date());
-        log.info("update form updateTime: {} at {}", form.getId(), new Date());
-        log.info("result is {}", formDao.findById(form.getId()).orElse(null));
         formItem.setId(null);
         formItem.setHasItem(null);
         formItem = formItemDao.save(formItem);

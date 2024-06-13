@@ -113,7 +113,7 @@ public class UserService implements UserDetailsService {
      * @param formId 表单id
      * @return 用户
      */
-    public User getUserByFormId(Long formId) {
+    public User getManagerByFormId(Long formId) {
         return userDao.findByFormId(formId);
     }
 

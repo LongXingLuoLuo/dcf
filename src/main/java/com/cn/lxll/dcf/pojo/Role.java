@@ -19,6 +19,7 @@ public class Role {
     @GeneratedValue
     private Long id;
 
+    // 角色名
     @Property
     private String name;
 

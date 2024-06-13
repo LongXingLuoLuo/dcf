@@ -18,18 +18,22 @@ public class CustomProperty {
     @GeneratedValue
     private Long id;
 
+    // 属性名
     @Property
     private String key;
 
     /**
+     * 属性类型
      * String, Integer, Boolean, Object, Array
      */
     @Property
     private String type;
 
+    // 是否为数组
     @Property
     private boolean arr;
 
+    // 指向的对象
     @ReadOnlyProperty
     @Relationship(value = "REF", direction = Relationship.Direction.OUTGOING)
     private CustomObject ref;

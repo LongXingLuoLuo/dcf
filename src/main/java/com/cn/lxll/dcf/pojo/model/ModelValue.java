@@ -18,18 +18,21 @@ public class ModelValue {
     @GeneratedValue
     private Long id;
 
+    // 模型值的内容
     @Property
     private String content;
 
-//    @JsonIgnore
+    // 模型值所属的模型
     @ReadOnlyProperty
     @Relationship(value = "HAS_VALUE", direction = Relationship.Direction.INCOMING)
     private Model owner;
 
+    // 模型值的信息
     @ReadOnlyProperty
     @Relationship(value = "HAS_INFO", direction = Relationship.Direction.OUTGOING)
     private CustomProperty info;
 
+    // 模型值的引用
     @ReadOnlyProperty
     @Relationship(value = "REF", direction = Relationship.Direction.OUTGOING)
     private Model ref;
