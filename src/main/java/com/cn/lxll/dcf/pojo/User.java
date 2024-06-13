@@ -1,17 +1,13 @@
 package com.cn.lxll.dcf.pojo;
 
-import com.cn.lxll.dcf.pojo.model.Model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.neo4j.core.schema.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.Instant;
 import java.util.*;
 
 /**

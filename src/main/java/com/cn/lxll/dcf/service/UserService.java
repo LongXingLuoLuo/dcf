@@ -4,12 +4,11 @@ import com.cn.lxll.dcf.dao.RoleDao;
 import com.cn.lxll.dcf.dao.UserDao;
 import com.cn.lxll.dcf.pojo.Role;
 import com.cn.lxll.dcf.pojo.User;
+import com.cn.lxll.dcf.util.CustomPasswordEncoder;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -74,7 +73,7 @@ public class UserService implements UserDetailsService {
             return null;
         }
         user.setId(null);
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        user.setPassword(new CustomPasswordEncoder().encode(user.getPassword()));
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);
@@ -91,9 +90,10 @@ public class UserService implements UserDetailsService {
                 return null;
             }
         }
-        user.setId(null);
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-        user = userDao.save(user);
+        user = this.save(user);
+        if (user == null) {
+            return null;
+        }
         for (Role role : roles) {
             userDao.addRole(user.getId(), role.getId());
         }
@@ -105,7 +105,7 @@ public class UserService implements UserDetailsService {
     }
 
     public void updatePassword(Long userId, String password) {
-        userDao.updatePassword(userId, new BCryptPasswordEncoder().encode(password));
+        userDao.updatePassword(userId, new CustomPasswordEncoder().encode(password));
     }
 
     public void addRole(Long userId, Long roleId) {

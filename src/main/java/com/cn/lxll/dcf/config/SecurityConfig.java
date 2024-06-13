@@ -1,15 +1,11 @@
 package com.cn.lxll.dcf.config;
 
-import com.alibaba.fastjson2.JSONObject;
 import com.cn.lxll.dcf.handler.*;
 import com.cn.lxll.dcf.filter.*;
-import com.cn.lxll.dcf.message.Message;
 import com.cn.lxll.dcf.service.UserService;
+import com.cn.lxll.dcf.util.CustomPasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -20,9 +16,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.annotation.Resource;
 
@@ -42,22 +36,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserService userService;
 
     @Resource
-    JwtLoginFailureHandler loginFailureHandler;
+    private JwtLoginFailureHandler loginFailureHandler;
 
     @Resource
-    JwtLoginSuccessHandler loginSuccessHandler;
+    private JwtLoginSuccessHandler loginSuccessHandler;
 
     @Resource
-    JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Resource
-    JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Resource
-    JwtLogoutSuccessHandler jwtLogoutSuccessHandler;
+    private JwtLogoutSuccessHandler jwtLogoutSuccessHandler;
+
     @Resource
     private CustomCorsConfigurationSource corsConfigurationSource;
-    @Autowired
+
+    @Resource
     private JwtLoginSuccessHandler jwtLoginSuccessHandler;
 
     /**
@@ -68,7 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Bean
     PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new CustomPasswordEncoder();
     }
 
     /**
