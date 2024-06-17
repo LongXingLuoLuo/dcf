@@ -25,6 +25,18 @@ public interface FormItemDao extends Neo4jRepository<FormItem, Long> {
     @Query("MATCH (f:Form)-[HAS_ITEM]->(i:FormItem) WHERE id(f) = $formId RETURN max(i.order)")
     Integer maxOrderByFormId(Long formId);
 
-    @Query("MATCH (f:Form)-[HAS_ITEM]->(i:FormItem) WHERE id(f) = $formId DELETE i")
+    @Query("MATCH (f:Form)-[HAS_ITEM]->(i:FormItem) WHERE id(f) = $formId DETACH DELETE i")
     void deleteAllByFormId(Long formId);
+
+    @Query("MATCH (i:FormItem), (p:CustomProperty) WHERE id(i) = $formItemId AND id(p) = $refId MERGE (i)-[:REF]->(p)")
+    void setRef(Long formItemId, Long refId);
+
+    @Query("MATCH (i:FormItem)-[r:REF]->(:CustomProperty) DELETE r")
+    void removeRef(Long formItemId);
+
+    @Query("MATCH (i:FormItem), (o:CustomObject) WHERE id(i) = $formItemId AND id(o) = $objectId MERGE (i)-[:OBJECT_TYPE]->(o)")
+    void setObject(Long formItemId, Long objectId);
+
+    @Query("MATCH (i:FormItem)-[r:OBJECT_TYPE]->(:CustomObject) WHERE id(i)=$formItemId DELETE r")
+    void removeObject(Long formItemId);
 }

@@ -69,62 +69,34 @@ public class CustomPropertyService {
     }
 
     public CustomProperty saveProperty(CustomProperty customProperty) {
-        if (customProperty != null){
-            customProperty.setId(null);
-        }
-        if (customProperty != null) {
-            return customPropertyDao.save(customProperty);
-        }
-        return null;
-    }
-
-    public CustomProperty saveBasicProperty(String key, String type, boolean arr) {
-        log.info("saveBasicProperty: key={}, type={}, arr={}", key, type, arr);
-        CustomProperty customProperty = new CustomProperty();
-        customProperty.setKey(key);
-        customProperty.setType(type);
-        customProperty.setArr(arr);
-        return customPropertyDao.save(customProperty);
-    }
-
-    public CustomProperty saveRefProperty(String key, boolean arr, Long refId) {
-        log.info("saveRefProperty: key={}, arr={}, refId={}", key, arr, refId);
-        CustomObject ref = customObjectDao.findById(refId).orElse(null);
-        if (ref == null) {
+        if (customProperty == null){
             return null;
         }
-        CustomProperty customProperty = new CustomProperty();
-        customProperty.setKey(key);
-        customProperty.setType("Object");
-        customProperty.setArr(arr);
-        customProperty = customPropertyDao.save(customProperty);
-        customPropertyDao.setRef(customProperty.getId(), refId);
+        CustomObject ref = null;
+        if (customProperty.getRef() != null && customProperty.getRef().getId() != null) {
+            ref = customObjectDao.findById(customProperty.getRef().getId()).orElse(null);
+        }
+        customProperty.setId(null);
+        customProperty =  customPropertyDao.save(customProperty);
+        if (ref != null){
+            customPropertyDao.setRef(customProperty.getId(), ref.getId());
+        }
         return customPropertyDao.findById(customProperty.getId()).orElse(null);
     }
 
-    public void updateBasicProperty(Long id, String key, String type, boolean arr) {
-        CustomProperty oldCustomProperty = customPropertyDao.findById(id).orElse(null);
-        if (oldCustomProperty == null) {
+    public void updateProperty(CustomProperty customProperty) {
+        if (customProperty == null){
             return;
         }
-        oldCustomProperty.setKey(key);
-        oldCustomProperty.setType(type);
-        oldCustomProperty.setArr(arr);
-        customPropertyDao.removeRef(id);
-        customPropertyDao.save(oldCustomProperty);
-    }
-
-    public void updateRefProperty(Long id, String key, boolean arr, Long refId) {
-        CustomProperty oldCustomProperty = customPropertyDao.findById(id).orElse(null);
-        if (oldCustomProperty == null) {
-            return;
+        CustomObject ref = null;
+        if (customProperty.getRef() != null && customProperty.getRef().getId() != null) {
+            ref = customObjectDao.findById(customProperty.getRef().getId()).orElse(null);
         }
-        oldCustomProperty.setKey(key);
-        oldCustomProperty.setType("Object");
-        oldCustomProperty.setArr(arr);
-        customPropertyDao.removeRef(id);
-        customPropertyDao.setRef(id, refId);
-        customPropertyDao.save(oldCustomProperty);
+        customProperty =  customPropertyDao.save(customProperty);
+        customPropertyDao.removeRef(customProperty.getId());
+        if (ref != null){
+            customPropertyDao.setRef(customProperty.getId(), ref.getId());
+        }
     }
 
     public void deleteProperty(Long id) {

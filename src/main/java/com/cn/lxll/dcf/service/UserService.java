@@ -73,6 +73,7 @@ public class UserService implements UserDetailsService {
             return null;
         }
         user.setId(null);
+        user.setName(user.getUsername());
         user.setPassword(new CustomPasswordEncoder().encode(user.getPassword()));
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);

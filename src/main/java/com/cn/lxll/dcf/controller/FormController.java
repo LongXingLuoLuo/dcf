@@ -109,6 +109,7 @@ public class FormController {
         formService.updateForm(form);
         return Message.SUCCESS.toJSONObject().toJSONString();
     }
+
     /**
      * 更新表单更新时间
      * @param id 表单ID
@@ -119,7 +120,34 @@ public class FormController {
     public String updateUpdateTime(@RequestParam Long id) {
         Form form = new Form();
         form.setId(id);
-        formService.updateUpdateTime(form);
+        formService.updateUpdateTime(id);
+        return Message.SUCCESS.toJSONObject().toJSONString();
+    }
+
+    /**
+     * 更新表单更新时间
+     * @param formId 表单ID
+     * @param refId 引用ID
+     * @return 更新结果
+     */
+    @ResponseBody
+    @PostMapping(value = "/update/ref", params = {"formId", "refId"})
+    public String updateRef(@RequestParam Long formId, @RequestParam Long refId) {
+        log.info("Update form ref: formId={}, refId={}", formId, refId);
+        formService.updateRef(formId, refId);
+        return Message.SUCCESS.toJSONObject().toJSONString();
+    }
+
+    /**
+     * 更新表单更新时间
+     * @param formId 表单ID
+     * @param managerId 控制人ID
+     * @return 更新结果
+     */
+    @ResponseBody
+    @PostMapping(value = "/update/manager", params = {"formId", "managerId"})
+    public String updateManager(@RequestParam Long formId, @RequestParam Long managerId) {
+        formService.updateManager(formId, managerId);
         return Message.SUCCESS.toJSONObject().toJSONString();
     }
 

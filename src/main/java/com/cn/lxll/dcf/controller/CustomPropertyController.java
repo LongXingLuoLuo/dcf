@@ -79,78 +79,22 @@ public class CustomPropertyController {
 
     @PostMapping(value = "/save")
     @ResponseBody
-    public String saveProperty(@RequestBody JSONObject content) {
-        String key = content.getString("key");
-        Boolean arr = content.getBoolean("arr");
-        CustomProperty property;
-        if (content.containsKey("refId")) {
-            Long refId = content.getLong("refId");
-            property = customPropertyService.saveRefProperty(key, arr, refId);
-        } else if (content.containsKey("type")) {
-            String type = content.getString("type");
-            property = customPropertyService.saveBasicProperty(key, type, arr);
-        } else  {
-            JSONObject jsonObject = Message.FAIL.toJSONObject();
-            jsonObject.put("message", "Property not found");
-            return jsonObject.toJSONString();
-        }
+    public String saveProperty(@RequestBody CustomProperty property) {
         if (property == null) {
             JSONObject jsonObject = Message.FAIL.toJSONObject();
             jsonObject.put("message", "Property not found");
             return jsonObject.toJSONString();
         }
         JSONObject jsonObject = Message.SUCCESS.toJSONObject();
-        jsonObject.put("property", property);
-        return jsonObject.toJSONString();
-    }
-
-    @PostMapping(value = "/save", params = {"key", "type", "arr"})
-    @ResponseBody
-    public String saveBasicProperty(@RequestParam String key, @RequestParam String type, @RequestParam Boolean arr) {
-        JSONObject jsonObject = Message.SUCCESS.toJSONObject();
-        jsonObject.put("property", customPropertyService.saveBasicProperty(key, type, arr));
-        return jsonObject.toJSONString();
-    }
-
-    @PostMapping(value = "/save", params = {"key", "arr", "refId"})
-    @ResponseBody
-    public String saveRefProperty(@RequestParam String key, @RequestParam Boolean arr, @RequestParam Long refId) {
-        CustomProperty property = customPropertyService.saveRefProperty(key, arr, refId);
-        if (property == null) {
-            JSONObject jsonObject = Message.FAIL.toJSONObject();
-            jsonObject.put("message", "Ref not found");
-            return jsonObject.toJSONString();
-        }
-        JSONObject jsonObject = Message.SUCCESS.toJSONObject();
-        jsonObject.put("property", property);
+        jsonObject.put("property", customPropertyService.saveProperty(property));
         return jsonObject.toJSONString();
     }
 
     @PostMapping(value = "/update")
     @ResponseBody
-    public String updateProperty(@RequestBody JSONObject content) {
-        JSONObject jsonObject;
-        if (content == null) {
-            jsonObject = Message.FAIL.toJSONObject();
-            jsonObject.put("message", "Property not found");
-            return jsonObject.toJSONString();
-        }
-        Long id = content.getLong("id");
-        String key = content.getString("key");
-        Boolean arr = content.getBoolean("arr");
-        if (content.containsKey("refId")) {
-            Long refId = content.getLong("refId");
-            customPropertyService.updateRefProperty(id, key, arr, refId);
-            jsonObject = Message.SUCCESS.toJSONObject();
-        } else if (content.containsKey("type")) {
-            String type = content.getString("type");
-            customPropertyService.updateBasicProperty(id, key, type, arr);
-            jsonObject = Message.SUCCESS.toJSONObject();
-        } else {
-            jsonObject = Message.FAIL.toJSONObject();
-            jsonObject.put("message", "Property not found");
-        }
-        return jsonObject.toJSONString();
+    public String updateProperty(@RequestBody CustomProperty property) {
+        customPropertyService.updateProperty(property);
+        return Message.SUCCESS.toJSONObject().toJSONString();
     }
 
     @DeleteMapping(value = "/delete", params = "id")

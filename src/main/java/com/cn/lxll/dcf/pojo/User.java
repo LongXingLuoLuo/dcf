@@ -1,7 +1,9 @@
 package com.cn.lxll.dcf.pojo;
 
+import com.cn.lxll.dcf.pojo.model.Model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.neo4j.core.schema.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,13 +17,10 @@ import java.util.*;
  *
  * @author Lxll
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Node("User")
-public class User implements UserDetails{
-    @Id
-    @GeneratedValue
-    private Long id;
-
+public class User extends Model implements UserDetails{
     // 用户名
     @Property
     private String username;
@@ -56,6 +55,7 @@ public class User implements UserDetails{
      * 返回用户的角色信息
      * @return 用户的角色信息
      */
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();

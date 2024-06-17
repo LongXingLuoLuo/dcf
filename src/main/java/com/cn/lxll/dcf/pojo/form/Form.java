@@ -1,13 +1,14 @@
 package com.cn.lxll.dcf.pojo.form;
 
 import com.cn.lxll.dcf.pojo.User;
+import com.cn.lxll.dcf.pojo.model.CustomObject;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.neo4j.core.schema.*;
 
-import java.util.Date;
+import java.time.Instant;
 
 /**
  * Project dcf
@@ -29,13 +30,17 @@ public class Form {
 
     @Property
     @CreatedDate
-    private Date createTime;
+    private Instant createTime;
 
     @Property
     @LastModifiedDate
-    private Date updateTime;
+    private Instant updateTime;
 
     @ReadOnlyProperty
     @Relationship(type = "MANAGE", direction = Relationship.Direction.INCOMING)
     private User manager;
+
+    @ReadOnlyProperty
+    @Relationship(type = "REF", direction = Relationship.Direction.OUTGOING)
+    private CustomObject ref;
 }
