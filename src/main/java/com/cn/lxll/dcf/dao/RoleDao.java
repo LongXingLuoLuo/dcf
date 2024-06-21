@@ -19,5 +19,8 @@ public interface RoleDao extends Neo4jRepository<Role, Long> {
     @Query("MERGE (r:Role{name:'user'}) RETURN r")
     Role findUser();
 
+    @Query("MERGE (r:Role{name:'admin'}) RETURN r")
+    Role findAdmin();
+
     Boolean existsByName(String name);
 }

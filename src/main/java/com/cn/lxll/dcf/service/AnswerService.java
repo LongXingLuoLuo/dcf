@@ -1,18 +1,17 @@
 package com.cn.lxll.dcf.service;
 
-import com.cn.lxll.dcf.dao.AnswerDao;
-import com.cn.lxll.dcf.dao.FormItemDao;
-import com.cn.lxll.dcf.dao.ModelDao;
-import com.cn.lxll.dcf.dao.UserDao;
+import com.cn.lxll.dcf.dao.*;
 import com.cn.lxll.dcf.pojo.User;
 import com.cn.lxll.dcf.pojo.form.Answer;
 import com.cn.lxll.dcf.pojo.form.FormItem;
 import com.cn.lxll.dcf.pojo.model.Model;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,6 +30,8 @@ public class AnswerService {
     private FormItemDao formItemDao;
     @Resource
     private ModelDao modelDao;
+    @Autowired
+    private FormDao formDao;
 
     public List<Answer> findAll(){
         return answerDao.findAll();
@@ -94,6 +95,7 @@ public class AnswerService {
             ref = null;
         }
         answer = answerDao.save(answer);
+        formDao.updateVisited(user.getId(), formItem.getForm().getId(), new Date());
         updateUser(answer.getId(), user.getId());
         updateFormItem(answer.getId(), formItem.getId());
         if (ref != null) {

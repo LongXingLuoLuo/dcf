@@ -30,6 +30,7 @@ public class FormController {
 
     /**
      * 获取表单
+     *
      * @param id 表单ID
      * @return 表单
      */
@@ -43,6 +44,7 @@ public class FormController {
 
     /**
      * 获取表单控制人
+     *
      * @param id 表单ID
      * @return 表单控制人
      */
@@ -56,6 +58,7 @@ public class FormController {
 
     /**
      * 获取该控制人管理的所有表单
+     *
      * @param managerId 控制人ID
      * @return 所有表单
      */
@@ -68,7 +71,22 @@ public class FormController {
     }
 
     /**
+     * 获取用户所有可以填写的表单
+     *
+     * @param userId 用户ID
+     * @return 所有可以填写的表单
+     */
+    @ResponseBody
+    @GetMapping(value = "/get/all/visitable", params = "userId")
+    public String getAllVisitableForms(@RequestParam Long userId) {
+        JSONObject jsonObject = Message.SUCCESS.toJSONObject();
+        jsonObject.put("forms", formService.findAllVisitableForms(userId));
+        return jsonObject.toJSONString();
+    }
+
+    /**
      * 保存表单
+     *
      * @param form 表单
      * @return 保存结果
      */
@@ -94,6 +112,7 @@ public class FormController {
 
     /**
      * 更新表单
+     *
      * @param form 表单
      * @return 更新结果
      */
@@ -112,6 +131,7 @@ public class FormController {
 
     /**
      * 更新表单更新时间
+     *
      * @param id 表单ID
      * @return 更新结果
      */
@@ -126,8 +146,9 @@ public class FormController {
 
     /**
      * 更新表单更新时间
+     *
      * @param formId 表单ID
-     * @param refId 引用ID
+     * @param refId  引用ID
      * @return 更新结果
      */
     @ResponseBody
@@ -140,7 +161,8 @@ public class FormController {
 
     /**
      * 更新表单更新时间
-     * @param formId 表单ID
+     *
+     * @param formId    表单ID
      * @param managerId 控制人ID
      * @return 更新结果
      */
@@ -151,8 +173,41 @@ public class FormController {
         return Message.SUCCESS.toJSONObject().toJSONString();
     }
 
+    @PostMapping(value = "/update/visited", params = {"userId", "formId"})
+    @ResponseBody
+    public String updateVisitedForm(@RequestParam Long userId, @RequestParam Long formId) {
+        formService.updateVisited(userId, formId);
+        return Message.SUCCESS.toJSONObject().toJSONString();
+    }
+
+    @GetMapping(value = "/exist/visited", params = {"userId", "formId"})
+    @ResponseBody
+    public String existVisitedForm(@RequestParam Long userId, @RequestParam Long formId) {
+        log.info("existVisitedForm: userId={}, formId={}", userId, formId);
+        JSONObject jsonObject = Message.SUCCESS.toJSONObject();
+        jsonObject.put("exist", formService.isVisitedForm(userId, formId));
+        return jsonObject.toJSONString();
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/count/all/nonVisited", params = "userId")
+    public String countAllNonVisitedForms(@RequestParam Long userId) {
+        JSONObject jsonObject = Message.SUCCESS.toJSONObject();
+        jsonObject.put("count", formService.countAllNonVisitForms(userId));
+        return jsonObject.toJSONString();
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/is/visitable", params = {"userId", "formId"})
+    public String isVisitable(@RequestParam Long userId, @RequestParam Long formId){
+        JSONObject jsonObject = Message.SUCCESS.toJSONObject();
+        jsonObject.put("is", formService.isVisitable(userId, formId));
+        return jsonObject.toJSONString();
+    }
+
     /**
      * 删除表单
+     *
      * @param id 表单ID
      * @return 删除结果
      */

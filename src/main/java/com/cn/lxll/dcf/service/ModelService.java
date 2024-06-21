@@ -84,6 +84,10 @@ public class ModelService {
         modelDao.removeInfo(modelId, infId);
     }
 
+    public Boolean isUser(Long modelId) {
+        return modelDao.isUser(modelId);
+    }
+
     public void deleteModel(Long id) {
         modelDao.deleteById(id);
     }

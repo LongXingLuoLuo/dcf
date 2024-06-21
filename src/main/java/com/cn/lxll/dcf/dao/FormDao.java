@@ -38,6 +38,18 @@ public interface FormDao extends Neo4jRepository<Form, Long> {
     @Query("MATCH (f:Form)-[:HAS_ITEM]->(i:FormItem) WHERE id(i) = $formItemId SET f.updateTime = $updateTime")
     void updateUpdateTimeByFormItemId(Long formItemId, Instant updateTime);
 
-    @Query("MATCH (u:User), (f:Form) WHERE id(u) = $userId AND id(f) = $formId MERGE (u)-[v:VISIT]->(f) SET v.time = $visitTime")
-    void updateVisit(Long userId, Long formId, Date visitTime);
+    @Query("MATCH (u:User), (f:Form) WHERE id(u) = $userId AND id(f) = $formId MERGE (u)-[v:HAS_VISITED]->(f) SET v.time = $visitTime")
+    void updateVisited(Long userId, Long formId, Date visitTime);
+
+    @Query("MATCH (u:User)-[:HAS_INFO]->(:CustomObject)<-[:REF]-(f:Form) WHERE id(u) = $userId RETURN f UNION MATCH (f:Form) WHERE NOT (:CustomObject)<-[:REF]-(f) RETURN f")
+    List<Form> findAllVisitableForms(Long userId);
+    
+    @Query("MATCH (u:User)-[v:HAS_VISITED]->(f:Form) WHERE id(u) = $userId AND id(f) = $formId RETURN (count(v) > 0)")
+    Boolean isVisited(Long userId, Long formId);
+
+    @Query("MATCH (u:User), (f:Form) WHERE id(u) = $userId AND id(f) = $formId AND ((u)-[:HAS_INFO]->(:CustomObject)<-[:REF]-(f) or NOT (:CustomObject)<-[:REF]-(f)) RETURN count(f) > 0")
+    Boolean isVisitable(Long userId, Long formId);
+
+    @Query("MATCH (u:User) WHERE id(u) = $userId MATCH (f:Form) WHERE ((u)-[:HAS_INFO]->(:CustomObject)<-[:REF]-(f) or NOT (:CustomObject)<-[:REF]-(f)) AND NOT (u)-[:HAS_VISITED]-(f)  RETURN count(f)")
+    Integer countAllNonVisitForms(Long userId);
 }
