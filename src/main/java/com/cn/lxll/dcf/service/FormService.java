@@ -40,6 +40,18 @@ public class FormService {
         return formDao.findById(id).orElse(null);
     }
 
+    public List<Form> findAllVisitableForms(Long userId) {
+        List<Form> forms = new ArrayList<>();
+        formDao.findAllVisitableForms(userId).forEach(form -> forms.add(formDao.findById(form.getId()).orElse(null)));
+        return forms;
+    }
+
+    public List<Form> getAllFormsByManager(Long managerId) {
+        List<Form> forms = new ArrayList<>();
+        formDao.findAllByManagerId(managerId).forEach(form -> forms.add(formDao.findById(form.getId()).orElse(null)));
+        return forms;
+    }
+
     public Form save(Form form) {
         if (form == null) {
             return null;
@@ -89,14 +101,22 @@ public class FormService {
         formDao.updateUpdateTimeById(id, new Date().toInstant());
     }
 
-    public void updateVisit(Long userId, Long formId) {
-        formDao.updateVisit(userId, formId, new Date());
+    public void updateVisited(Long userId, Long formId) {
+        formDao.updateVisited(userId, formId, new Date());
     }
 
-    public List<Form> getAllFormsByManager(Long managerId) {
-        List<Form> forms = new ArrayList<>();
-        formDao.findAllByManagerId(managerId).forEach(form -> forms.add(formDao.findById(form.getId()).orElse(null)));
-        return forms;
+    public Boolean isVisitedForm(Long userId, Long formId) {
+        log.info("isVisitedForm: userId={}, formId={}", userId, formId);
+        log.info("isVisitedForm: formDao.isVisited(userId, formId)={}", formDao.isVisited(userId, formId));
+        return formDao.isVisited(userId, formId);
+    }
+
+    public Boolean isVisitable(Long userId, Long formId) {
+        return formDao.isVisitable(userId, formId);
+    }
+
+    public Integer countAllNonVisitForms(Long userId) {
+        return formDao.countAllNonVisitForms(userId);
     }
 
     public void deleteFormById(Long id) {

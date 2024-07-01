@@ -149,6 +149,15 @@ public class ModelController {
         return Message.SUCCESS.toJSONObject().toJSONString();
     }
 
+    @ResponseBody
+    @GetMapping(value = "/is/user", params = "modelId")
+    public String isUser(@RequestParam Long modelId) {
+        log.info("Check if model is user: {}", modelId);
+        JSONObject jsonObject = Message.SUCCESS.toJSONObject();
+        jsonObject.put("is", modelService.isUser(modelId));
+        return jsonObject.toJSONString();
+    }
+
     /**
      * 删除模型
      * @param id 模型id

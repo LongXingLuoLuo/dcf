@@ -123,6 +123,20 @@ public class UserController {
     }
 
     /**
+     * 设置用户为管理员
+     * @param userId 用户id
+     * @return 设置后的用户
+     */
+    @PostMapping(value ="/role/add/admin", params = "userId")
+    @ResponseBody
+    public String roleAddAdmin(@RequestParam("userId") Long userId) {
+        userService.setAdmin(userId);
+        JSONObject jsonObject = Message.SUCCESS.toJSONObject();
+        jsonObject.put("user", userService.getUserById(userId));
+        return jsonObject.toJSONString();
+    }
+
+    /**
      * 删除用户
      * @param id 用户id
      * @return 删除结果

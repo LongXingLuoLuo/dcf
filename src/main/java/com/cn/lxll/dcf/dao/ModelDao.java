@@ -30,4 +30,7 @@ public interface ModelDao extends Neo4jRepository<Model, Long> {
 
     @Query("MATCH (m:Model)-[r:HAS_INFO]->(co:CustomObject) WHERE id(m) = $modelId DELETE r")
     void clearInfos(Long modelId);
+
+    @Query("MATCH (m:Model:User) WHERE id(m) = $modelId RETURN count(m) > 0")
+    Boolean isUser(Long modelId);
 }

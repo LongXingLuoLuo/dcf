@@ -109,6 +109,10 @@ public class UserService implements UserDetailsService {
         userDao.updatePassword(userId, new CustomPasswordEncoder().encode(password));
     }
 
+    public void setAdmin(Long userId) {
+        userDao.addRole(userId, roleDao.findAdmin().getId());
+    }
+
     public void addRole(Long userId, Long roleId) {
         userDao.addRole(userId, roleId);
     }
